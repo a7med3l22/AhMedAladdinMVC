@@ -1,3 +1,6 @@
+using AhMedAladdinMVC.DAL.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace AhMedAladdinMVC.PL
 {
     public class Program
@@ -8,8 +11,13 @@ namespace AhMedAladdinMVC.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            var app = builder.Build();
+
+
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
