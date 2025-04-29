@@ -1,3 +1,5 @@
+using AhMedAladdinMVC.BLL.IRepositories;
+using AhMedAladdinMVC.BLL.Repositories;
 using AhMedAladdinMVC.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +15,7 @@ namespace AhMedAladdinMVC.PL
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+            builder.Services.AddScoped<IDepartmentRepository,DeparymentRepository>();
 
 
 
@@ -29,8 +31,8 @@ namespace AhMedAladdinMVC.PL
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseStaticFiles();
+			app.UseAuthorization();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
