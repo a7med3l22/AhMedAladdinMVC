@@ -42,5 +42,8 @@ namespace AhMedAladdinMVC.BLL.Repositories
 			 _context.Departments.Update(entity);
 			return _context.SaveChanges();
 		}
+
+
+
 	}
 }

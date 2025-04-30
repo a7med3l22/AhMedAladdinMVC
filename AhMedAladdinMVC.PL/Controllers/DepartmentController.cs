@@ -35,5 +35,60 @@ namespace AhMedAladdinMVC.PL.Controllers
 
 			return View(department);
 		}
+
+		[HttpGet]
+		public IActionResult Details(int? id,string action= "Details")
+		{
+			if (!id.HasValue)
+			{
+				return BadRequest();
+			}
+
+			var department = _departmentRepo.GetById(id.Value);
+			if (department is null)
+			{
+				return NotFound();
+			}
+			return View(action, department);
+		}
+
+		[HttpGet]
+		public IActionResult Edit(int id)
+		{
+			return Details(id, "Edit");
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit([FromRoute]int Id, Department department)
+		{
+			if(department.Id != Id)
+			{
+				return BadRequest("Invalid input ياض. Please check your data.");
+			}
+			if (ModelState.IsValid)
+			{
+				var count = _departmentRepo.Update(department);
+				if (count > 0)
+					return RedirectToAction(nameof(Index));
+			}
+
+			return View(department);
+		}
+
+
+		public IActionResult Delete(int id)
+		{
+			return Details(id, "Delete");
+		}
+		[HttpPost]
+		public IActionResult Delete(Department department)
+		{
+		
+				 _departmentRepo.Delete(department);
+				
+				return RedirectToAction(nameof(Index));
+		
+		}
 	}
 }
+
