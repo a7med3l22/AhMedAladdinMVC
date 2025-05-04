@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace AhMedAladdinMVC.BLL.IRepositories
 {
-	public interface IDepartmentRepository:IGenericRepository<Department>
+	public interface IEmployeeRepository:IGenericRepository<Employee>
 	{
-		
+		 IQueryable<Employee> GetEmpByAddress(string address);
 	}
 }

@@ -63,7 +63,7 @@ namespace AhMedAladdinMVC.PL.Controllers
 		{
 			if(department.Id != Id)
 			{
-				return BadRequest("Invalid input ياض. Please check your data.");
+				return BadRequest("Invalid input,  Please check your data.");
 			}
 			if (ModelState.IsValid)
 			{

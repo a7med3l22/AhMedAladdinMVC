@@ -15,7 +15,7 @@ namespace AhMedAladdinMVC.PL
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddScoped<IDepartmentRepository,DeparymentRepository>();
+            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
 
 
 

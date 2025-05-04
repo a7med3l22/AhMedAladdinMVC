@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace AhMedAladdinMVC.BLL.IRepositories
 {
-	public interface IDepartmentRepository:IGenericRepository<Department>
+	public interface IGenericRepository<T> where T : ModelBase 
 	{
-		
+		IEnumerable<T> GetAll();
+		T? GetById(int id);
+		int Add(T entity);
+		int Update(T entity);
+		int Delete(T entity);
+
+
 	}
+	
 }

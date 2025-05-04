@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace AhMedAladdinMVC.DAL.Models
 {
-	public class Department
+	public class Department:ModelBase
 	{
-		public int Id { get; set; }
 		public string Code { get; set; }
 		public string Name { get; set; }
 		[Display(Name = "Date Of Creation")]
