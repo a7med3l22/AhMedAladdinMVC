@@ -1,0 +1,104 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "Create Employee";
+}
+@{
+    var genders =  ViewBag.Genders ;
+    var empTypes = ViewBag.EmpTypes;
+}
+
+<h1>Create Employee</h1>
+
+<form  asp-action="Create">
+
+    <div class="form-group">
+        <label asp-for="Name" class="col-form-label"></label>
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"> </span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Age" class="col-form-label"></label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Address" class="col-form-label"></label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Salary" class="col-form-label"></label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HiringDate" class="col-form-label"></label>
+        <input asp-for="HiringDate" class="form-control" />
+        <span asp-validation-for="HiringDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Gender" class="col-form-label"></label>
+        <select asp-for="Gender" asp-items="genders" class="form-control">
+            <option selected disabled>Select An Gender</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EmpType" class="col-form-label"></label>
+        <select asp-for="EmpType" asp-items="empTypes" class="form-control">
+            <option selected disabled>Select An Employee Type</option>
+        </select>
+        <span asp-validation-for="EmpType" class="text-danger"></span>
+    </div>
+
+
+
+    @* <div class="form-group"> *@
+    @*     <label asp-for="CreationDate" class="col-form-label"></label> *@
+    @*     <input asp-for="CreationDate" class="form-control" /> *@
+    @*     <span asp-validation-for="CreationDate" class="text-danger"></span> *@
+    @* </div> *@
+
+
+    <div class="form-group form-check">
+             <label asp-for="IsDeleted" class="form-check-label">Is Deleted</label>
+            <input asp-for="IsDeleted" class="form-check-input" />
+            <span asp-validation-for="IsDeleted" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber" class="col-form-label"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="col-form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <label asp-for="IsActive" class="form-check-label">Is Active</label>
+        <input asp-for="IsActive" class="form-check-input" />
+        <span asp-validation-for="IsActive" class="text-danger"></span>
+    </div>
+    <br />
+    <input type="submit" value="Create" class="btn btn-primary" /> |
+    <a asp-action="Index" class="btn btn-light">Back to List</a>
+
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

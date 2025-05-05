@@ -17,7 +17,7 @@ namespace AhMedAladdinMVC.PL.Controllers
 			var depatments= _departmentRepo.GetAll();
 			return View(depatments);
 		}
-		[HttpGet]
+		
 		public IActionResult Create()
 		{
 			return View();
@@ -36,7 +36,6 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return View(department);
 		}
 
-		[HttpGet]
 		public IActionResult Details(int? id,string action= "Details")
 		{
 			if (!id.HasValue)
@@ -52,7 +51,6 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return View(action, department);
 		}
 
-		[HttpGet]
 		public IActionResult Edit(int id)
 		{
 			return Details(id, "Edit");
