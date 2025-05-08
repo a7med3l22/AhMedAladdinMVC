@@ -46,11 +46,8 @@ namespace AhMedAladdinMVC.DAL.Models
 		[Display(Name = "Hiring Date")]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
 		public DateTime HiringDate { get; set; }
-
-		[Range(1, 2, ErrorMessage = "Please select Gender")]
 		public Gender Gender { get; set; }
 
-		[Range(1, 2, ErrorMessage = "Please select employee type")]
 		public EmpType EmpType { get; set; }
 
 
@@ -77,5 +74,8 @@ namespace AhMedAladdinMVC.DAL.Models
 		public bool IsActive { get; set; }
 
 
+		public int? DepartmentId { get; set; } 
+
+		public Department? Department { get; set; }
 	}
 }

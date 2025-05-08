@@ -17,6 +17,9 @@ namespace AhMedAladdinMVC.DAL.Data.Configurations
 			builder.Property(d => d.Id).UseIdentityColumn(10,10);
 			builder.Property(d => d.Code).HasColumnType("varchar").HasMaxLength(50);
 			builder.Property(d => d.Name).HasColumnType("varchar").HasMaxLength(50);
+
+
+			builder.HasMany(d => d.Employees).WithOne(e => e.Department).HasForeignKey(e => e.DepartmentId).OnDelete(DeleteBehavior.Cascade);
 		}
 
 	

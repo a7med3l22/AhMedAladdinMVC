@@ -10,23 +10,8 @@
 
 <form asp-action="Create">
 
-    <div class="form-group">
-        <label asp-for="Code" class="col-form-label"></label>
-        <input asp-for="Code" class="form-control" />
-        <span asp-validation-for="Code" class="text-danger"> </span>
-    </div>
+    <partial name="Partial/CreateEditPartial" />
 
-    <div class="form-group">
-    <label asp-for="Name" class="col-form-label"></label>
-    <input asp-for="Name" class="form-control" />
-    <span asp-validation-for="Name" class="text-danger"> </span>
-    </div>
-
-    <div class="form-group">
-    <label asp-for="DateOfCreation" class="col-form-label"></label>
-    <input asp-for="DateOfCreation" class="form-control" />
-    <span asp-validation-for="DateOfCreation" class="text-danger"> </span>
-    </div>
     <br />
     <input type="submit" value="Create" class="btn btn-primary" /> |
     <a asp-action="Index" class="btn btn-light">Back to List</a>
@@ -35,7 +20,5 @@
 
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

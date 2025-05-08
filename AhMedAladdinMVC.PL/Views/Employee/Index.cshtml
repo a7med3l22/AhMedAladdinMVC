@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<Employee>
 @{
     ViewData["Title"] = "All Emoloyee";
+    var culture = new System.Globalization.CultureInfo("ar-EG");
+    culture.NumberFormat.CurrencyDecimalDigits = 0; 
 }
 <h1>All Emoloyee</h1>
 <br />
@@ -22,6 +24,7 @@
                 <th>@Html.DisplayNameFor(E => E.Gender)</th>
                 <th>@Html.DisplayNameFor(E => E.Email)</th>
                 <th>@Html.DisplayNameFor(E => E.IsActive)</th>
+                <th>@Html.DisplayNameFor(E => E.Department)</th>
                 <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
@@ -29,39 +32,28 @@
         </thead>
 
         <tbody>
-            <tr>
+            
                 @foreach (var emp in Model)
                 {
                     //  استخدم @Html.DisplayFor لما يكون في تنسيق مخصص أو بيانات حساسة للتنسيق (تاريخ، عملة، رقم هاتف، بريد).
+                <tr>
                     <td>@emp.Name</td> 
                     <td>@emp.Age</td> 
                     @* <td>@emp.Address</td> *@
-                    <td>@emp.Salary.ToString("C", new System.Globalization.CultureInfo("ar-EG"))</td> 
+                    <td> @emp.Salary.ToString("C", culture)</td>
                     @* <td>@Html.DisplayFor(model => emp.HiringDate)</td> *@
                     <td>@Html.DisplayFor(model =>emp.Gender)</td>  
                     @* <td>@Html.DisplayFor(model =>emp.EmpType)</td> *@
                     @* <td>@Html.DisplayFor(model =>emp.CreationDate)</td> *@
                     @* <td>@Html.DisplayFor(model =>emp.IsDeleted)</td> *@
                     @* <td>@Html.DisplayFor(model =>emp.PhoneNumber)</td> *@
-                    <td>@Html.DisplayFor(model =>emp.Email)</td> 
-                    <td>@Html.DisplayFor(model =>emp.IsActive)</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@emp.Id" class="btn btn-warning">
-                            <i class="fas fa-eye"></i> Details
-                        </a>
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-success">
-                            <i class="fas fa-edit"></i> Update
-                        </a>
-                    </td>
-                    <td>
-                        <a asp-action="Delete" asp-route-id="@emp.Id" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> Delete
-                        </a>
-                    </td>
+                    <td>@Html.DisplayFor(model =>emp.Email)</td>
+                    <td>@Html.DisplayFor(model => emp.IsActive)</td>
+                    <td>@emp.Department?.Name</td>
+                    <partial name="_sharedbuttonsPartial" model="@emp.Id" />
+                </tr>
                 }
-            </tr>
+            
         </tbody>
     </table>
 }

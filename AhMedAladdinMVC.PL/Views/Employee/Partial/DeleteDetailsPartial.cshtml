@@ -1,0 +1,86 @@
+﻿@using AhMedAladdinMVC.BLL.IRepositories
+@model Employee
+@inject IDepartmentRepository _departmentRepo
+@{
+
+    var genders = ViewBag.Genders;
+    var empTypes = ViewBag.EmpTypes;
+    var departments =new SelectList(_departmentRepo.GetAll().Select(d => new { Val = d.Id, Text = d.Name }),"Val","Text");
+}
+<div class="form-group">
+<label asp-for="Name" class="col-form-label"></label>
+<input asp-for="Name" class="form-control" disabled />
+    </div>
+
+<div class="form-group">
+    <label asp-for="Age" class="col-form-label"></label>
+    <input asp-for="Age" class="form-control" disabled />
+
+</div>
+
+<div class="form-group">
+    <label asp-for="Address" class="col-form-label"></label>
+    <input asp-for="Address" class="form-control" disabled />
+</div>
+
+<div class="form-group">
+    <label asp-for="Salary" class="col-form-label"></label>
+    <input asp-for="Salary" class="form-control" disabled />
+</div>
+
+<div class="form-group">
+    <label asp-for="HiringDate" class="col-form-label"></label>
+    <input asp-for="HiringDate" class="form-control" disabled />
+</div>
+
+<div class="form-group">
+    <label asp-for="Gender" class="col-form-label"></label>
+    <select disabled asp-for="Gender" asp-items="genders" class="form-control">
+    </select>
+</div>
+
+<div class="form-group">
+    <label asp-for="EmpType" class="col-form-label"></label>
+    <select disabled asp-for="EmpType" asp-items="empTypes" class="form-control">
+    </select>
+</div>
+
+
+
+@* <div class="form-group"> *@
+@*     <label asp-for="CreationDate" class="col-form-label"></label> *@
+@*     <input asp-for="CreationDate" class="form-control" /> *@
+@*     <span asp-validation-for="CreationDate" class="text-danger"></span> *@
+@* </div> *@
+
+
+@* <div class="form-group form-check"> *@
+@*     <label asp-for="IsDeleted" class="form-check-label">Is Deleted</label> *@
+@*     <input asp-for="IsDeleted" class="form-check-input" disabled /> *@
+@* </div> *@
+
+
+<div class="form-group">
+    <label asp-for="PhoneNumber" class="col-form-label"></label>
+    <input asp-for="PhoneNumber" class="form-control" disabled />
+</div>
+
+<div class="form-group">
+    <label asp-for="Email" class="col-form-label"></label>
+    <input asp-for="Email" class="form-control" disabled />
+</div>
+
+
+<div class="form-group">
+    <label asp-for="Department" class="col-form-label"></label>
+    <select  disabled asp-for="DepartmentId" asp-items="departments" class="form-control"> 
+        <option>(Default) In No Department</option>
+    </select>
+</div>
+
+
+<br />
+<div class="form-group form-check">
+    <label asp-for="IsActive" class="form-check-label">Is Active</label>
+    <input asp-for="IsActive" class="form-check-input" disabled />
+</div>

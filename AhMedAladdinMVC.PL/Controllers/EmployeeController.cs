@@ -12,8 +12,11 @@ namespace AhMedAladdinMVC.PL.Controllers
 	{
 		private void SetDropDownLists()
 		{
-			ViewBag.Genders = new SelectList(Enum.GetValues(typeof(Gender)));
-			ViewBag.EmpTypes = new SelectList(Enum.GetValues(typeof(EmpType)));
+			var genders = Enum.GetValues(typeof(Gender)).Cast<Gender>().Select(g => new { Value = (int)g, Text = g.ToString() });
+			var EmpTypes = Enum.GetValues(typeof(EmpType)).Cast<EmpType>().Select(e => new { Value = (int)e, Text = e.ToString() });
+
+			ViewBag.Genders = new SelectList(genders,"Value","Text");
+			ViewBag.EmpTypes = new SelectList(EmpTypes,"Value","Text");
 		}
 		private readonly IEmployeeRepository _employeeRepo;
 
@@ -60,7 +63,8 @@ namespace AhMedAladdinMVC.PL.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var count= _employeeRepo.Update(employee);
+
+				var count = _employeeRepo.Update(employee);
 				if (count > 0)
 					return RedirectToAction(nameof(Index));
 			}

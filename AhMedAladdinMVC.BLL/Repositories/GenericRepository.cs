@@ -31,7 +31,12 @@ namespace AhMedAladdinMVC.BLL.Repositories
 		}
 
 		public IEnumerable<T> GetAll()
-		=> _context.Set<T>().AsNoTracking().ToList();
+		{
+			if(typeof(T) == typeof(Employee)) 
+				return (IEnumerable<T>)_context.Employees.Include(e=>e.Department).AsNoTracking().ToList();			
+			else 
+				return _context.Set<T>().AsNoTracking().ToList();
+		}
 
 
 		public T? GetById(int id) => _context.Set<T>().Find(id);
