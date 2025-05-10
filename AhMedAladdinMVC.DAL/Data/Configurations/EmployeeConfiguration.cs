@@ -16,6 +16,8 @@ namespace AhMedAladdinMVC.DAL.Data.Configurations
 			builder.Property(e => e.Name).HasColumnType("varchar").HasMaxLength(50);
 			builder.Property(e => e.Salary).HasColumnType("decimal(12,2)");
 			builder.Property(e => e.Gender).HasConversion<string>();
+			builder.Property(e => e.Name).HasMaxLength(50);
+
 		}
 	}
 }

@@ -1,11 +1,11 @@
-﻿@using AhMedAladdinMVC.BLL.IRepositories
-@model Employee
-@inject IDepartmentRepository _departmentRepo
+﻿
+@model EmployeeViewModel
+@inject IUnitOfWork _UnitOfWork;
 @{
 
     var genders = ViewBag.Genders;
     var empTypes = ViewBag.EmpTypes;
-    var departments =new SelectList(_departmentRepo.GetAll().Select(d => new { Val = d.Id, Text = d.Name }),"Val","Text");
+    var departments = new SelectList(_UnitOfWork.genericRepository<Department>().GetAll().Select(d => new { Val = d.Id, Text = d.Name }), "Val", "Text");
 }
 <div class="form-group">
 <label asp-for="Name" class="col-form-label"></label>

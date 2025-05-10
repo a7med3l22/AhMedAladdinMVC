@@ -1,7 +1,9 @@
 using AhMedAladdinMVC.BLL.IRepositories;
 using AhMedAladdinMVC.BLL.Repositories;
 using AhMedAladdinMVC.DAL.Data;
+using AhMedAladdinMVC.PL.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AhMedAladdinMVC.PL
 {
@@ -14,10 +16,10 @@ namespace AhMedAladdinMVC.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
-            builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();
+				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))).AddMyAppExtensions();
 
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 			var app = builder.Build();

@@ -1,5 +1,8 @@
 ﻿using AhMedAladdinMVC.BLL.IRepositories;
+using AhMedAladdinMVC.BLL.UnitOfWork;
 using AhMedAladdinMVC.DAL.Models;
+using AhMedAladdinMVC.PL.ViewModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -12,22 +15,31 @@ namespace AhMedAladdinMVC.PL.Controllers
 	{
 		private void SetDropDownLists()
 		{
-			var genders = Enum.GetValues(typeof(Gender)).Cast<Gender>().Select(g => new { Value = (int)g, Text = g.ToString() });
-			var EmpTypes = Enum.GetValues(typeof(EmpType)).Cast<EmpType>().Select(e => new { Value = (int)e, Text = e.ToString() });
+			var genders = Enum.GetValues(typeof(ViewModels.Gender)).Cast<ViewModels.Gender>().Select(g => new { Value = (int)g, Text = g.ToString() });
+			var EmpTypes = Enum.GetValues(typeof(ViewModels.EmpType)).Cast<ViewModels.EmpType>().Select(e => new { Value = (int)e, Text = e.ToString() });
 
 			ViewBag.Genders = new SelectList(genders,"Value","Text");
 			ViewBag.EmpTypes = new SelectList(EmpTypes,"Value","Text");
 		}
-		private readonly IEmployeeRepository _employeeRepo;
 
-		public EmployeeController(IEmployeeRepository employeeRepo)
+		private readonly IMapper _mapper;
+		private readonly IUnitOfWork _unitOfWork;
+
+		public EmployeeController(IMapper mapper,IUnitOfWork unitOfWork)
 		{
-			_employeeRepo = employeeRepo;
+			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
-		public IActionResult Index()
+		public IActionResult Index(String search)
 		{
-			var Emps = _employeeRepo.GetAll();
-			return View(Emps);
+			IEnumerable<Employee> Emps;
+			if (string.IsNullOrEmpty(search))			
+				Emps = _unitOfWork.genericRepository<Employee>().GetAll();
+			else
+			    Emps = ((IEmployeeRepository)_unitOfWork.genericRepository<Employee>()).GetEmpByName(search);
+			
+			var empView = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Emps);
+			return View(empView);
 		}
 		public IActionResult Create()
 		{
@@ -35,41 +47,43 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult Create(Employee employee)
+		public IActionResult Create(EmployeeViewModel employeeVM)
 		{
 			if (ModelState.IsValid)
 			{
-				var count= _employeeRepo.Add(employee);
+				var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+				var count= _unitOfWork.genericRepository<Employee>().Add(employee);
 				if (count > 0)
 					return RedirectToAction(nameof(Index));
 			}
 				SetDropDownLists();
-				return View(employee);
+				return View(employeeVM);
 		}
 		public IActionResult Edit(int? id,string action="Edit")
 		{
 			if (!id.HasValue)
 				return BadRequest();
 			
-			var Employee=_employeeRepo.GetById(id.Value);
+			var Employee= _unitOfWork.genericRepository<Employee>().GetById(id.Value);
 			if(Employee == null)
 				return NotFound();
 			SetDropDownLists();
-			return View(action,Employee);
+			var EmployeeVM=_mapper.Map<Employee, EmployeeViewModel>(Employee);
+			return View(action, EmployeeVM);
 
 		}
 		[HttpPost]
-		public IActionResult Edit(Employee employee)
+		public IActionResult Edit(EmployeeViewModel employeeVM)
 		{
 			if (ModelState.IsValid)
 			{
-
-				var count = _employeeRepo.Update(employee);
+				var employee= _mapper.Map<EmployeeViewModel,Employee>(employeeVM);
+				var count = _unitOfWork.genericRepository<Employee>().Update(employee);
 				if (count > 0)
 					return RedirectToAction(nameof(Index));
 			}
 			SetDropDownLists();
-			return View(employee);
+			return View(employeeVM);
 		}
 
 		public IActionResult Details(int?id)
@@ -83,10 +97,10 @@ namespace AhMedAladdinMVC.PL.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Delete(Employee employee)
+		public IActionResult Delete(EmployeeViewModel employeeVM)
 		{
-
-			_employeeRepo.Delete(employee);
+			var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+			_unitOfWork.genericRepository<Employee>().Delete(employee);
 			return RedirectToAction(nameof(Index));
 
 		}

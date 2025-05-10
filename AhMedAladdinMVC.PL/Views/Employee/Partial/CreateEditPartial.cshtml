@@ -1,9 +1,9 @@
-﻿@using AhMedAladdinMVC.BLL.IRepositories
-@model Employee
-@inject IDepartmentRepository _departmentrepo;
+﻿
+@model EmployeeViewModel
+@inject IUnitOfWork _UnitOfWork;
 @{
-    var x = _departmentrepo.GetAll().Select(d => new { val = d.Id, text = d.Name });
-    var departments = new SelectList(x,"val","text");
+    var departments = _UnitOfWork.genericRepository<Department>().GetAll().Select(d => new { val = d.Id, text = d.Name });
+    var SelectListdepartments = new SelectList(departments, "val", "text");
     var genders = ViewBag.Genders;
     var empTypes = ViewBag.EmpTypes;
 }
@@ -81,7 +81,7 @@
 
 <div class="form-group">
     <label asp-for="Department" class="col-form-label"></label>
-    <select asp-for="DepartmentId" asp-items="departments" class="form-control">
+    <select asp-for="DepartmentId" asp-items="SelectListdepartments" class="form-control">
         <option value="@null" selected >(Default) In No Department</option>
     </select>
     <span asp-validation-for="DepartmentId" class="text-danger"></span>

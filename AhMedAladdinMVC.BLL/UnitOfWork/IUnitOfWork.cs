@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace AhMedAladdinMVC.BLL.IRepositories
 {
-	public interface IEmployeeRepository:IGenericRepository<Employee>
+	public interface IUnitOfWork:IDisposable
 	{
-		 IQueryable<Employee> GetEmpByAddress(string address);
-		 IQueryable<Employee> GetEmpByName(string name);
+		public IGenericRepository<T> genericRepository<T>() where T : ModelBase;
+		int complete();
 	}
 }

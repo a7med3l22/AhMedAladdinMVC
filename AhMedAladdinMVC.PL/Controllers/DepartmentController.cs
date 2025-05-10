@@ -1,21 +1,26 @@
 ﻿using AhMedAladdinMVC.BLL.IRepositories;
 using AhMedAladdinMVC.DAL.Models;
+using AhMedAladdinMVC.PL.ViewModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AhMedAladdinMVC.PL.Controllers
 {
 	public class DepartmentController : Controller
 	{
-		private readonly IDepartmentRepository _departmentRepo;
+		private readonly IMapper _mapper;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public DepartmentController(IDepartmentRepository departmentRepo)
+		public DepartmentController(IMapper mapper,IUnitOfWork unitOfWork)
 		{
-			_departmentRepo = departmentRepo;
+			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
 		public IActionResult Index()
 		{
-			var depatments= _departmentRepo.GetAll();
-			return View(depatments);
+			var depatments= _unitOfWork.genericRepository<Department>().GetAll();
+			var departmentsVM= _mapper.Map<IEnumerable<Department>,IEnumerable<DepartmentViewModel>>(depatments);
+			return View(departmentsVM);
 		}
 		
 		public IActionResult Create()
@@ -24,16 +29,17 @@ namespace AhMedAladdinMVC.PL.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Create(Department department)
+		public IActionResult Create(DepartmentViewModel departmentVM)
 		{
 			if(ModelState.IsValid)
 			{
-				var count = _departmentRepo.Add(department);
+				var department=_mapper.Map<DepartmentViewModel,Department>(departmentVM);	
+				var count = _unitOfWork.genericRepository<Department>().Add(department);
 				if (count > 0)
 				return RedirectToAction(nameof(Index));	
 			}
 
-			return View(department);
+			return View(departmentVM);
 		}
 
 		public IActionResult Details(int? id,string action= "Details")
@@ -43,12 +49,13 @@ namespace AhMedAladdinMVC.PL.Controllers
 				return BadRequest();
 			}
 
-			var department = _departmentRepo.GetById(id.Value);
+			var department = _unitOfWork.genericRepository<Department>().GetById(id.Value);
 			if (department is null)
 			{
 				return NotFound();
 			}
-			return View(action, department);
+			var departmentVM=_mapper.Map<Department,DepartmentViewModel>(department);
+			return View(action, departmentVM);
 		}
 
 		public IActionResult Edit(int id)
@@ -57,20 +64,21 @@ namespace AhMedAladdinMVC.PL.Controllers
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit([FromRoute]int Id, Department department)
+		public IActionResult Edit([FromRoute]int Id, DepartmentViewModel departmentVM)
 		{
-			if(department.Id != Id)
+			if(departmentVM.Id != Id)
 			{
 				return BadRequest("Invalid input,  Please check your data.");
 			}
 			if (ModelState.IsValid)
 			{
-				var count = _departmentRepo.Update(department);
+				var department=_mapper.Map<DepartmentViewModel,Department>(departmentVM);
+				var count = _unitOfWork.genericRepository<Department>().Update(department);
 				if (count > 0)
 					return RedirectToAction(nameof(Index));
 			}
 
-			return View(department);
+			return View(departmentVM);
 		}
 
 
@@ -79,10 +87,11 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return Details(id, "Delete");
 		}
 		[HttpPost]
-		public IActionResult Delete(Department department)
+		public IActionResult Delete(DepartmentViewModel departmentVM)
 		{
-		
-				 _departmentRepo.Delete(department);
+			var department=_mapper.Map<DepartmentViewModel,Department>(departmentVM);
+
+			_unitOfWork.genericRepository<Department>().Delete(department);
 				
 				return RedirectToAction(nameof(Index));
 		
