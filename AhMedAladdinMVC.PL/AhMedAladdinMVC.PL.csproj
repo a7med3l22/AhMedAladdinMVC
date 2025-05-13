@@ -20,4 +20,9 @@
     <ProjectReference Include="..\AhMedAladdinMVC.BLL\AhMedAladdinMVC.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Files\Images\" />
+    <Folder Include="wwwroot\Files\" />
+  </ItemGroup>
+
 </Project>

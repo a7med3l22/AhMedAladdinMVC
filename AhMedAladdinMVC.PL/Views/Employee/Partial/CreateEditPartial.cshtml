@@ -1,12 +1,23 @@
-﻿
-@model EmployeeViewModel
+﻿@model EmployeeViewModel
 @inject IUnitOfWork _UnitOfWork;
 @{
-    var departments = _UnitOfWork.genericRepository<Department>().GetAll().Select(d => new { val = d.Id, text = d.Name });
+    var departments =(await _UnitOfWork.genericRepository<Department>().GetAllAsync()).Select(d => new { val = d.Id, text = d.Name });
     var SelectListdepartments = new SelectList(departments, "val", "text");
     var genders = ViewBag.Genders;
     var empTypes = ViewBag.EmpTypes;
 }
+
+
+@if (!string.IsNullOrEmpty(Model?.ImageName))
+{
+
+    <img src="~/Files/Images/@Model.ImageName" alt="Employee Image" class="img-fluid rounded-circle" style="max-width: 200px; max-height: 200px;" />
+    <br />
+    <input type="checkbox" name="RemoveImage" value="true" class="form-check-input" />
+    <label class="form-check-label">Remove this image</label>
+}
+<br />
+<br />
 <div class="form-group">
     <label asp-for="Name" class="col-form-label"></label>
     <input asp-for="Name" class="form-control" />
@@ -86,6 +97,20 @@
     </select>
     <span asp-validation-for="DepartmentId" class="text-danger"></span>
 </div>
+
+
+<br />
+@* imageName علشان يبعت معايا ال *@
+<input type="hidden" asp-for="ImageName" />
+    <div class="form-group">
+        <label asp-for="Image" class="col-form-label">Upload Image: </label>
+        <input asp-for="Image" class="form-control-file" />
+    <br />
+
+    </div>
+
+
+
 <br />
 <div class="form-group form-check">
     <label asp-for="IsActive" class="form-check-label">Is Active</label>

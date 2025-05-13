@@ -1,7 +1,9 @@
 using AhMedAladdinMVC.BLL.IRepositories;
 using AhMedAladdinMVC.BLL.Repositories;
 using AhMedAladdinMVC.DAL.Data;
-using AhMedAladdinMVC.PL.Extensions;
+using AhMedAladdinMVC.DAL.Models;
+using AhMedAladdinMVC.PL.Helpers.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +22,13 @@ namespace AhMedAladdinMVC.PL
 
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+            builder.Services.AddIdentity<ApplicationUser,IdentityRole>(
+                options =>
+                {
+                    options.Password.RequiredLength = 5;
+                    
+				}
+                ).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 			var app = builder.Build();
 

@@ -2,7 +2,7 @@
 using AhMedAladdinMVC.BLL.Repositories;
 using AhMedAladdinMVC.BLL.UnitOfWork;
 
-namespace AhMedAladdinMVC.PL.Extensions
+namespace AhMedAladdinMVC.PL.Helpers.Extensions
 {
 	public static class MyAppExtensions
 	{

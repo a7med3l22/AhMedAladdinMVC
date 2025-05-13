@@ -16,6 +16,7 @@
                 <th>@Html.DisplayNameFor(E => E.Email)</th>
                 <th>@Html.DisplayNameFor(E => E.IsActive)</th>
                 <th>@Html.DisplayNameFor(E => E.Department)</th>
+                <th>Photo</th>
                 <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
@@ -41,6 +42,16 @@
                     <td>@Html.DisplayFor(model => emp.Email)</td>
                     <td>@Html.DisplayFor(model => emp.IsActive)</td>
                     <td>@emp.Department?.Name</td>
+                    <td>
+                        @if(emp.ImageName is not null)
+                        {
+                            <input disabled type="checkbox" checked class="form-check-input" />
+                        }
+                        else
+                        {
+                            <input disabled type="checkbox" class="form-check-input" />
+                        }
+                    </td>
                     <partial name="_sharedbuttonsPartial" model="@emp.Id" />
                 </tr>
             }

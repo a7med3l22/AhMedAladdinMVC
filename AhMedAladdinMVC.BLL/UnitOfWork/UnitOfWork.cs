@@ -41,14 +41,14 @@ namespace AhMedAladdinMVC.BLL.UnitOfWork
 		}
 
 
-		public int complete()
+		public Task<int> CompleteAsync()
 		{
-			return _dbContext.SaveChanges();
+			return _dbContext.SaveChangesAsync();
 		}
 
-		public void Dispose()
+		public ValueTask DisposeAsync()
 		{
-			_dbContext.Dispose();     		
+		return	_dbContext.DisposeAsync();
 		}
 	}
 }

@@ -4696,7 +4696,7 @@ if ( !support.option ) {
 }
 
 
-function getAll( context, tag ) {
+function GetAllAsync( context, tag ) {
 
 	// Support: IE <=9 - 11 only
 	// Use typeof to avoid zero-argument method invocation on host objects (trac-15151)
@@ -4805,7 +4805,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 		attached = isAttached( elem );
 
 		// Append to fragment
-		tmp = getAll( fragment.appendChild( elem ), "script" );
+		tmp = GetAllAsync( fragment.appendChild( elem ), "script" );
 
 		// Preserve script evaluation history
 		if ( attached ) {
@@ -5896,7 +5896,7 @@ function domManip( collection, args, callback, ignored ) {
 
 		// Require either new content or an interest in ignored elements to invoke the callback
 		if ( first || ignored ) {
-			scripts = jQuery.map( getAll( fragment, "script" ), disableScript );
+			scripts = jQuery.map( GetAllAsync( fragment, "script" ), disableScript );
 			hasScripts = scripts.length;
 
 			// Use the original fragment for the last item
@@ -5913,7 +5913,7 @@ function domManip( collection, args, callback, ignored ) {
 
 						// Support: Android <=4.0 only, PhantomJS 1 only
 						// push.apply(_, arraylike) throws on ancient WebKit
-						jQuery.merge( scripts, getAll( node, "script" ) );
+						jQuery.merge( scripts, GetAllAsync( node, "script" ) );
 					}
 				}
 
@@ -5966,12 +5966,12 @@ function remove( elem, selector, keepData ) {
 
 	for ( ; ( node = nodes[ i ] ) != null; i++ ) {
 		if ( !keepData && node.nodeType === 1 ) {
-			jQuery.cleanData( getAll( node ) );
+			jQuery.cleanData( GetAllAsync( node ) );
 		}
 
 		if ( node.parentNode ) {
 			if ( keepData && isAttached( node ) ) {
-				setGlobalEval( getAll( node, "script" ) );
+				setGlobalEval( GetAllAsync( node, "script" ) );
 			}
 			node.parentNode.removeChild( node );
 		}
@@ -5995,9 +5995,9 @@ jQuery.extend( {
 				!jQuery.isXMLDoc( elem ) ) {
 
 			// We eschew jQuery#find here for performance reasons:
-			// https://jsperf.com/getall-vs-sizzle/2
-			destElements = getAll( clone );
-			srcElements = getAll( elem );
+			// https://jsperf.com/GetAllAsync-vs-sizzle/2
+			destElements = GetAllAsync( clone );
+			srcElements = GetAllAsync( elem );
 
 			for ( i = 0, l = srcElements.length; i < l; i++ ) {
 				fixInput( srcElements[ i ], destElements[ i ] );
@@ -6007,8 +6007,8 @@ jQuery.extend( {
 		// Copy the events from the original to the clone
 		if ( dataAndEvents ) {
 			if ( deepDataAndEvents ) {
-				srcElements = srcElements || getAll( elem );
-				destElements = destElements || getAll( clone );
+				srcElements = srcElements || GetAllAsync( elem );
+				destElements = destElements || GetAllAsync( clone );
 
 				for ( i = 0, l = srcElements.length; i < l; i++ ) {
 					cloneCopyEvent( srcElements[ i ], destElements[ i ] );
@@ -6019,9 +6019,9 @@ jQuery.extend( {
 		}
 
 		// Preserve script evaluation history
-		destElements = getAll( clone, "script" );
+		destElements = GetAllAsync( clone, "script" );
 		if ( destElements.length > 0 ) {
-			setGlobalEval( destElements, !inPage && getAll( elem, "script" ) );
+			setGlobalEval( destElements, !inPage && GetAllAsync( elem, "script" ) );
 		}
 
 		// Return the cloned set
@@ -6126,7 +6126,7 @@ jQuery.fn.extend( {
 			if ( elem.nodeType === 1 ) {
 
 				// Prevent memory leaks
-				jQuery.cleanData( getAll( elem, false ) );
+				jQuery.cleanData( GetAllAsync( elem, false ) );
 
 				// Remove any remaining nodes
 				elem.textContent = "";
@@ -6167,7 +6167,7 @@ jQuery.fn.extend( {
 
 						// Remove element nodes and prevent memory leaks
 						if ( elem.nodeType === 1 ) {
-							jQuery.cleanData( getAll( elem, false ) );
+							jQuery.cleanData( GetAllAsync( elem, false ) );
 							elem.innerHTML = value;
 						}
 					}
@@ -6192,7 +6192,7 @@ jQuery.fn.extend( {
 			var parent = this.parentNode;
 
 			if ( jQuery.inArray( this, ignored ) < 0 ) {
-				jQuery.cleanData( getAll( this ) );
+				jQuery.cleanData( GetAllAsync( this ) );
 				if ( parent ) {
 					parent.replaceChild( elem, this );
 				}
@@ -9292,7 +9292,7 @@ jQuery.extend( {
 				},
 
 				// Raw string
-				getAllResponseHeaders: function() {
+				GetAllAsyncResponseHeaders: function() {
 					return completed ? responseHeadersString : null;
 				},
 
@@ -9896,7 +9896,7 @@ jQuery.ajaxTransport( function( options ) {
 									typeof xhr.responseText !== "string" ?
 										{ binary: xhr.response } :
 										{ text: xhr.responseText },
-									xhr.getAllResponseHeaders()
+									xhr.GetAllAsyncResponseHeaders()
 								);
 							}
 						}

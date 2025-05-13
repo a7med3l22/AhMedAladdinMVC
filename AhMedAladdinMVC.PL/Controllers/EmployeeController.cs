@@ -1,16 +1,16 @@
 ﻿using AhMedAladdinMVC.BLL.IRepositories;
-using AhMedAladdinMVC.BLL.UnitOfWork;
 using AhMedAladdinMVC.DAL.Models;
+using AhMedAladdinMVC.PL.Helpers.Document;
 using AhMedAladdinMVC.PL.ViewModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 
 
 
 namespace AhMedAladdinMVC.PL.Controllers
 {
+	
 	public class EmployeeController : Controller
 	{
 		private void SetDropDownLists()
@@ -30,11 +30,11 @@ namespace AhMedAladdinMVC.PL.Controllers
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
 		}
-		public IActionResult Index(String search)
+		public async Task<IActionResult> Index(String search)
 		{
 			IEnumerable<Employee> Emps;
 			if (string.IsNullOrEmpty(search))			
-				Emps = _unitOfWork.genericRepository<Employee>().GetAll();
+				Emps =await _unitOfWork.genericRepository<Employee>().GetAllAsync();
 			else
 			    Emps = ((IEmployeeRepository)_unitOfWork.genericRepository<Employee>()).GetEmpByName(search);
 			
@@ -47,24 +47,28 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult Create(EmployeeViewModel employeeVM)
+		public async Task<IActionResult> Create(EmployeeViewModel employeeVM)
 		{
 			if (ModelState.IsValid)
 			{
+				if(employeeVM.Image is not null)
+					employeeVM.ImageName = DocumentSetting.UploadFile(employeeVM.Image, "Images");
+
 				var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-				var count= _unitOfWork.genericRepository<Employee>().Add(employee);
+				 _unitOfWork.genericRepository<Employee>().Add(employee);
+				var count =await _unitOfWork.CompleteAsync();
 				if (count > 0)
 					return RedirectToAction(nameof(Index));
 			}
 				SetDropDownLists();
 				return View(employeeVM);
 		}
-		public IActionResult Edit(int? id,string action="Edit")
+		public async Task<IActionResult> Edit(int? id,string action="Edit")
 		{
 			if (!id.HasValue)
 				return BadRequest();
 			
-			var Employee= _unitOfWork.genericRepository<Employee>().GetById(id.Value);
+			var Employee= await _unitOfWork.genericRepository<Employee>().GetById(id.Value);
 			if(Employee == null)
 				return NotFound();
 			SetDropDownLists();
@@ -73,12 +77,30 @@ namespace AhMedAladdinMVC.PL.Controllers
 
 		}
 		[HttpPost]
-		public IActionResult Edit(EmployeeViewModel employeeVM)
+		public async Task<IActionResult> Edit(EmployeeViewModel employeeVM, bool RemoveImage = false)
 		{
+			
 			if (ModelState.IsValid)
 			{
+				if (RemoveImage)
+				{
+					if (!string.IsNullOrEmpty(employeeVM.ImageName))
+						DocumentSetting.DeleteFile("Images", employeeVM.ImageName);
+
+					employeeVM.ImageName = null;
+				}
+
+				if (employeeVM.Image is not null)
+				{
+					if (!string.IsNullOrEmpty(employeeVM.ImageName))
+						DocumentSetting.DeleteFile("Images", employeeVM.ImageName);
+					employeeVM.ImageName = DocumentSetting.UploadFile(employeeVM.Image, "Images");
+				}
+				
 				var employee= _mapper.Map<EmployeeViewModel,Employee>(employeeVM);
-				var count = _unitOfWork.genericRepository<Employee>().Update(employee);
+				  _unitOfWork.genericRepository<Employee>().Update(employee);
+				  var count =await _unitOfWork.CompleteAsync();
+
 				if (count > 0)
 					return RedirectToAction(nameof(Index));
 			}
@@ -86,21 +108,25 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return View(employeeVM);
 		}
 
-		public IActionResult Details(int?id)
-		{
-			return Edit(id, "Details");
+		public async Task<IActionResult> Details(int?id)
+		{ 
+			return await Edit(id, "Details");
 		}
 
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			return Edit(id, "Delete");
+			return await Edit(id, "Delete");
 		}
 
 		[HttpPost]
-		public IActionResult Delete(EmployeeViewModel employeeVM)
+		public async Task<IActionResult> Delete(EmployeeViewModel employeeVM)
 		{
+			if (!string.IsNullOrEmpty(employeeVM.ImageName))
+				DocumentSetting.DeleteFile("Images", employeeVM.ImageName);
+
 			var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 			_unitOfWork.genericRepository<Employee>().Delete(employee);
+			 await _unitOfWork.CompleteAsync();
 			return RedirectToAction(nameof(Index));
 
 		}

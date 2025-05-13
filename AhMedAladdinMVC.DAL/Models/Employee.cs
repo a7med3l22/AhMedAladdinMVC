@@ -36,5 +36,7 @@ namespace AhMedAladdinMVC.DAL.Models
 		public bool IsActive { get; set; }
 		public int? DepartmentId { get; set; } 
 		public Department? Department { get; set; }
+
+		public string ? ImageName { get; set; }
 	}
 }

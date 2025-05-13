@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace AhMedAladdinMVC.BLL.IRepositories
 {
-	public interface IUnitOfWork:IDisposable
+	public interface IUnitOfWork:IAsyncDisposable
 	{
 		public IGenericRepository<T> genericRepository<T>() where T : ModelBase;
-		int complete();
+		Task<int> CompleteAsync();
 	}
 }

@@ -18,34 +18,25 @@ namespace AhMedAladdinMVC.BLL.Repositories
 		{
 			_context = context;
 		}
-		public int Add(T entity)
+		public void Add(T entity)
 		{
 			 _context.Add(entity);
-			return _context.SaveChanges();
 		}
 
-		public int Delete(T entity)
+		public void Delete(T entity)
 		{	
 			_context.Remove(entity);
-			return _context.SaveChanges();
 		}
 
-		public IEnumerable<T> GetAll()
-		{
-			if(typeof(T) == typeof(Employee)) 
-				return (IEnumerable<T>)_context.Employees.Include(e=>e.Department).AsNoTracking().ToList();			
-			else 
-				return _context.Set<T>().AsNoTracking().ToList();
-		}
-
-
-		public T? GetById(int id) => _context.Set<T>().Find(id);
+		public virtual async Task<IEnumerable<T>> GetAllAsync()=>await _context.Set<T>().AsNoTracking().ToListAsync();
 		
 
-		public int Update(T entity)
+		public async Task<T?> GetById(int id) =>await _context.Set<T>().FindAsync(id);
+		
+
+		public void Update(T entity)
 		{
 			_context.Update(entity);
-			return _context.SaveChanges();
 		}
 	}
 }

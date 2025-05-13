@@ -14,11 +14,14 @@ namespace AhMedAladdinMVC.BLL.Repositories
 	{
 		public EmployeeRepository(ApplicationDbContext context) : base(context) { }
 		
-			public IQueryable<Employee> GetEmpByAddress(string address) => _context.Set<Employee>().Where(emp=>string.Equals(emp.Address,address, StringComparison.OrdinalIgnoreCase));
+		public IQueryable<Employee> GetEmpByAddress(string address) => _context.Set<Employee>().Where(emp=>string.Equals(emp.Address,address, StringComparison.OrdinalIgnoreCase));
 
 		public IQueryable<Employee> GetEmpByName(string search)
 		{
 			return _context.Employees.Where(e => e.Name.Contains(search));
 		}
+
+		public override async Task<IEnumerable<Employee>> GetAllAsync()=>await _context.Employees.Include(e => e.Department).AsNoTracking().ToListAsync();
+		
 	}
 }

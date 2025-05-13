@@ -3,6 +3,7 @@ using AhMedAladdinMVC.DAL.Models;
 using AhMedAladdinMVC.PL.ViewModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace AhMedAladdinMVC.PL.Controllers
 {
@@ -16,9 +17,9 @@ namespace AhMedAladdinMVC.PL.Controllers
 			_mapper = mapper;
 			_unitOfWork = unitOfWork;
 		}
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var depatments= _unitOfWork.genericRepository<Department>().GetAll();
+			var depatments=await _unitOfWork.genericRepository<Department>().GetAllAsync();
 			var departmentsVM= _mapper.Map<IEnumerable<Department>,IEnumerable<DepartmentViewModel>>(depatments);
 			return View(departmentsVM);
 		}
@@ -29,12 +30,13 @@ namespace AhMedAladdinMVC.PL.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Create(DepartmentViewModel departmentVM)
+		public async Task<IActionResult> Create(DepartmentViewModel departmentVM)
 		{
 			if(ModelState.IsValid)
 			{
 				var department=_mapper.Map<DepartmentViewModel,Department>(departmentVM);	
-				var count = _unitOfWork.genericRepository<Department>().Add(department);
+				 _unitOfWork.genericRepository<Department>().Add(department);
+				var count =await _unitOfWork.CompleteAsync();
 				if (count > 0)
 				return RedirectToAction(nameof(Index));	
 			}
@@ -42,14 +44,14 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return View(departmentVM);
 		}
 
-		public IActionResult Details(int? id,string action= "Details")
+		public async Task<IActionResult> Details(int? id,string action= "Details")
 		{
 			if (!id.HasValue)
 			{
 				return BadRequest();
 			}
 
-			var department = _unitOfWork.genericRepository<Department>().GetById(id.Value);
+			var department =await _unitOfWork.genericRepository<Department>().GetById(id.Value);
 			if (department is null)
 			{
 				return NotFound();
@@ -58,13 +60,14 @@ namespace AhMedAladdinMVC.PL.Controllers
 			return View(action, departmentVM);
 		}
 
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
-			return Details(id, "Edit");
+			return await Details(id, "Edit");
 		}
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit([FromRoute]int Id, DepartmentViewModel departmentVM)
+		public async Task<IActionResult> Edit([FromRoute]int Id, DepartmentViewModel departmentVM)
 		{
 			if(departmentVM.Id != Id)
 			{
@@ -73,7 +76,8 @@ namespace AhMedAladdinMVC.PL.Controllers
 			if (ModelState.IsValid)
 			{
 				var department=_mapper.Map<DepartmentViewModel,Department>(departmentVM);
-				var count = _unitOfWork.genericRepository<Department>().Update(department);
+				 _unitOfWork.genericRepository<Department>().Update(department);
+				var count = await _unitOfWork.CompleteAsync();
 				if (count > 0)
 					return RedirectToAction(nameof(Index));
 			}
@@ -82,17 +86,18 @@ namespace AhMedAladdinMVC.PL.Controllers
 		}
 
 
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			return Details(id, "Delete");
+			return await Details(id, "Delete");
 		}
 		[HttpPost]
-		public IActionResult Delete(DepartmentViewModel departmentVM)
+		public async Task<IActionResult> Delete(DepartmentViewModel departmentVM)
 		{
 			var department=_mapper.Map<DepartmentViewModel,Department>(departmentVM);
 
 			_unitOfWork.genericRepository<Department>().Delete(department);
-				
+			await _unitOfWork.CompleteAsync();
+
 				return RedirectToAction(nameof(Index));
 		
 		}

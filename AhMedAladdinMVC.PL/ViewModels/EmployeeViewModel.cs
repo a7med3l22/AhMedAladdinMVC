@@ -1,4 +1,5 @@
 ﻿using AhMedAladdinMVC.DAL.Models;
+using AhMedAladdinMVC.PL.ViewModels.Custom_Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace AhMedAladdinMVC.PL.ViewModels
@@ -17,7 +18,6 @@ namespace AhMedAladdinMVC.PL.ViewModels
 	}
 	public class EmployeeViewModel
 	{
-		[Key]
 		public int Id { get; set; }
 
 
@@ -58,6 +58,10 @@ namespace AhMedAladdinMVC.PL.ViewModels
 		public int? DepartmentId { get; set; }
 
 		public Department? Department { get; set; }
+		public string? ImageName { get; set; }
+
+		public IFormFile ? Image { get; set; }
+
 
 	}
 }

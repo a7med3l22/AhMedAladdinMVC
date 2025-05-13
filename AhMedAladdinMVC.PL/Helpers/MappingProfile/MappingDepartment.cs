@@ -2,7 +2,7 @@
 using AhMedAladdinMVC.PL.ViewModels;
 using AutoMapper;
 
-namespace AhMedAladdinMVC.PL.MappingProfile
+namespace AhMedAladdinMVC.PL.Helpers.MappingProfile
 {
 	public class MappingDepartment : Profile
 	{

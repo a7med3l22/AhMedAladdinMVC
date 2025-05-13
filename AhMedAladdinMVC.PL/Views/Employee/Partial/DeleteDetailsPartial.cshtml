@@ -1,12 +1,20 @@
-﻿
-@model EmployeeViewModel
+﻿@model EmployeeViewModel
 @inject IUnitOfWork _UnitOfWork;
 @{
 
     var genders = ViewBag.Genders;
     var empTypes = ViewBag.EmpTypes;
-    var departments = new SelectList(_UnitOfWork.genericRepository<Department>().GetAll().Select(d => new { Val = d.Id, Text = d.Name }), "Val", "Text");
+    var departments = new SelectList((await _UnitOfWork.genericRepository<Department>().GetAllAsync()).Select(d => new { Val = d.Id, Text = d.Name }), "Val", "Text");
 }
+<div class="form-group">
+    <br />
+    @if (!string.IsNullOrEmpty(Model?.ImageName))
+    {
+        <img src="~/Files/Images/@Model.ImageName" class="img-fluid rounded-circle" alt="Employee Image" style="max-width: 200px; max-height: 200px;" />
+    }
+</div>
+<br />
+<br />
 <div class="form-group">
 <label asp-for="Name" class="col-form-label"></label>
 <input asp-for="Name" class="form-control" disabled />
@@ -77,6 +85,9 @@
         <option>(Default) In No Department</option>
     </select>
 </div>
+
+<br />
+
 
 
 <br />
