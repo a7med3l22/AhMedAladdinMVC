@@ -1,9 +1,11 @@
-using AhMedAladdinMVC.BLL.IRepositories;
+﻿using AhMedAladdinMVC.BLL.IRepositories;
 using AhMedAladdinMVC.BLL.Repositories;
 using AhMedAladdinMVC.DAL.Data;
 using AhMedAladdinMVC.DAL.Models;
 using AhMedAladdinMVC.PL.Helpers.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +18,17 @@ namespace AhMedAladdinMVC.PL
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            builder.Services.AddControllersWithViews(options=>
+            {
+				// كل الكنترولز هتبقي اكن محطوط عليها [Authorize]
+				//////////////
+				var policy = new AuthorizationPolicyBuilder()
+				   .RequireAuthenticatedUser()
+				   .Build();
+				options.Filters.Add(new AuthorizeFilter(policy));
+			   //////////////
+            
+            }).AddRazorRuntimeCompilation();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))).AddMyAppExtensions();
 
@@ -26,10 +38,20 @@ namespace AhMedAladdinMVC.PL
                 options =>
                 {
                     options.Password.RequiredLength = 5;
-                    
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
 				}
-                ).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
+                ).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); // 👈 دي مهمة جدًا
+			;
+			///////////////////////
+			///هنا بعدل ال config بتاع ال identity
+			builder.Services.ConfigureApplicationCookie(options =>
+			{
+				options.LoginPath = "/Account/SignIn";
+				options.LogoutPath = "/Account/SignOut";
+				//options.AccessDeniedPath = "/Account/AccessDenied";
+			});
+			///////////////////////
 			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -43,10 +65,9 @@ namespace AhMedAladdinMVC.PL
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseStaticFiles();
-			app.UseAuthorization();
-
-            app.MapStaticAssets();
-            app.MapControllerRoute(
+			app.UseAuthentication(); // 👈 لازم الأول
+			app.UseAuthorization();  // 👈 بعده			
+			app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();

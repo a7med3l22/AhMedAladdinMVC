@@ -1,7 +1,7 @@
 ﻿using AhMedAladdinMVC.PL.ViewModels.Custom_Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace AhMedAladdinMVC.PL.ViewModels
+namespace AhMedAladdinMVC.PL.ViewModels.AccountVM
 {
 	public class SignUpViewModel
 	{

@@ -3,43 +3,43 @@
     ViewData["Title"] = "Sign Up";
     Layout = "~/Views/Shared/_AccountLayout.cshtml";
 }
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div asp-validation-summary="ModelOnly"></div>
 
 <form  asp-action="SignUp">
 
 		<div class="form-group">
 			<input asp-for="firstName" class="text" placeholder="First Name" required="">
-			<span asp-validation-for="firstName"  class="text-danger"></span>
+			<span asp-validation-for="firstName"></span>
 		</div>
 
 		<div class="form-group">
 		<input asp-for="lastName" class="text" placeholder="Last Name" required="">
-			<span asp-validation-for="lastName" class="text-danger"></span>
+			<span asp-validation-for="lastName"></span>
 		</div>
 
 		<div class="form-group">
 		<input asp-for="userName" class="form-control text " placeholder="Username" required="">
-			<span asp-validation-for="userName" class="text-danger"></span>
+			<span asp-validation-for="userName"></span>
 		</div>
 
 		<div class="form-group">
 		<input asp-for="email" class="form-control text email " placeholder="Email" required="">
-			<span asp-validation-for="email" class="text-danger"></span>
+			<span asp-validation-for="email"></span>
 		</div>
 
 		<div class="form-group">
 		<input asp-for="password" class="form-control text " placeholder="Password" required="">
-			<span asp-validation-for="password" class="text-danger"></span>
+			<span asp-validation-for="password"></span>
 		</div>
 
 		<div class="form-group">
 		<input asp-for="confirmPassword" class="form-control text w3lpass" placeholder="Confirm Password" required="">
-			<span asp-validation-for="confirmPassword" class="text-danger"></span>
+			<span asp-validation-for="confirmPassword"></span>
 		</div>
 
 
 		<div class="wthree-text">
-			<label class="anim" asp-for="IsAgree">
+			<label class="anim">
 			<input asp-for="IsAgree" type="checkbox"  class="form-check-input checkbox" >
 			<span>I Agree To The Terms & Conditions</span>
 			</label>
@@ -50,6 +50,7 @@
 		<input type="submit" value="SIGNUP">
 </form>
 
+<p>have an Account? <a asp-action="SignIn"> SignIn Now!</a></p>
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script>

@@ -2,6 +2,7 @@
 using AhMedAladdinMVC.DAL.Models;
 using AhMedAladdinMVC.PL.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
